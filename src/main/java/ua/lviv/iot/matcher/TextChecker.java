@@ -6,20 +6,18 @@ import java.util.regex.Pattern;
 
 public class TextChecker {
 
-    public static void checkPatterns(final int lengthOfWord, String textToCheck) {
-//        (^\\w{x}\\s)|(\\s\\w{x}\\s)
-        String regularExpression = "\\w++";
-        Pattern pattern2 = Pattern.compile(regularExpression);
-        Pattern findQuestionsPattern = Pattern.compile("\\?");
-        Matcher findQuestionsMatcher = findQuestionsPattern.matcher(textToCheck);
-        Pattern pattern = Pattern.compile("[.?!](\\s|\\w)+\\?");
-        Matcher matcher = pattern.matcher("." + findQuestionsMatcher.replaceAll("?."));
-        while (matcher.find()) {
-            
-            Matcher matcher2 = pattern2.matcher(matcher.group());
-            while (matcher2.find()) {
-                if (matcher2.group().length() == lengthOfWord) {
-                    System.out.println(matcher2.group());
+    public static void checkPatterns(final int lengthOfWord, final String textToCheck) {
+        Pattern secondPattern = Pattern.compile("\\w++");
+        Pattern replaceQuestionmarkPattern = Pattern.compile("\\?");
+        Matcher replaceQuestionmarkMatcher = replaceQuestionmarkPattern.matcher(textToCheck);
+        Pattern firstPattern = Pattern.compile("[.?!](\\s|\\w)+\\?");
+        Matcher firstMatcher = firstPattern
+                .matcher("." + replaceQuestionmarkMatcher.replaceAll("?."));
+        while (firstMatcher.find()) {
+            Matcher secondMatcher = secondPattern.matcher(firstMatcher.group());
+            while (secondMatcher.find()) {
+                if (secondMatcher.group().length() == lengthOfWord) {
+                    System.out.println(secondMatcher.group());
                 }
             }
         }
