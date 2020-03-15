@@ -1,25 +1,31 @@
 package ua.lviv.iot.matcher;
 
+import java.util.LinkedHashSet;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TextChecker {
 
     public static void checkPatterns(final int lengthOfWord, final String textToCheck) {
-        Pattern secondPattern = Pattern.compile("\\w++");
+        Set<String> foundWords = new LinkedHashSet<>();
+        Pattern pattern = Pattern.compile("\\w++");
         Pattern replaceQuestionmarkPattern = Pattern.compile("\\?");
         Matcher replaceQuestionmarkMatcher = replaceQuestionmarkPattern.matcher(textToCheck);
-        Pattern firstPattern = Pattern.compile("[.?!](\\s|\\w)+\\?");
-        Matcher firstMatcher = firstPattern
+        Pattern findQuestioningSentencesPattern = Pattern.compile("[.?!](\\s|\\w)+\\?");
+        Matcher findQuestioningSentencesMatcher = findQuestioningSentencesPattern
                 .matcher("." + replaceQuestionmarkMatcher.replaceAll("?."));
-        while (firstMatcher.find()) {
-            Matcher secondMatcher = secondPattern.matcher(firstMatcher.group());
-            while (secondMatcher.find()) {
-                if (secondMatcher.group().length() == lengthOfWord) {
-                    System.out.println(secondMatcher.group());
+        while (findQuestioningSentencesMatcher.find()) {
+            Matcher matcher = pattern.matcher(findQuestioningSentencesMatcher.group());
+            while (matcher.find()) {
+                if (matcher.group().length() == lengthOfWord) {
+                    foundWords.add(matcher.group());
                 }
             }
+        }
+        for (String foundWord : foundWords) {
+            System.out.println(foundWord);
         }
     }
 
